@@ -76,7 +76,12 @@ struct ContentComposerView: View {
                 .bitchatFont(size: 15)
                 .foregroundColor(palette.primary)
                 .focused(isTextFieldFocused)
-                .autocorrectionDisabled(true)
+                .autocorrectionDisabled(
+                    ComposerAutocorrectPolicy.shouldDisable(
+                        for: messageText,
+                        cursor: messageText.count
+                    )
+                )
                 #if os(iOS)
                 .textInputAutocapitalization(.sentences)
                 #endif
