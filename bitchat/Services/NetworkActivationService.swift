@@ -121,7 +121,7 @@ final class NetworkActivationService: ObservableObject {
     nonisolated static func persistedTorPreference(
         in defaults: UserDefaults = .standard
     ) -> Bool {
-        defaults.object(forKey: torPreferenceKey) as? Bool ?? true
+        defaults.object(forKey: torPreferenceKey) as? Bool ?? false
     }
 
     func start() {
@@ -131,7 +131,7 @@ final class NetworkActivationService: ObservableObject {
         if let stored = storage.object(forKey: Self.torPreferenceKey) as? Bool {
             userTorEnabled = stored
         } else {
-            userTorEnabled = true
+            userTorEnabled = false
         }
 
         // Begin (idempotent) reachability monitoring and seed initial state.

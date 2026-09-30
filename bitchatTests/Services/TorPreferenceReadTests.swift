@@ -12,10 +12,10 @@ struct TorPreferenceReadTests {
         UserDefaults(suiteName: "bitchat.tests.tor.\(UUID().uuidString)")!
     }
 
-    @Test func defaultsToOnWhenNothingHasBeenStored() {
-        // Fail safe: an unwritten preference must not read as "Tor off", which
-        // would let a fetch go direct.
-        #expect(NetworkActivationService.persistedTorPreference(in: makeDefaults()))
+    @Test func defaultsToOffWhenNothingHasBeenStored() {
+        // Fresh installs leave Tor opt-in (#1549): networks that filter Tor
+        // otherwise brick first launch. Users who need Tor turn it on in settings.
+        #expect(!NetworkActivationService.persistedTorPreference(in: makeDefaults()))
     }
 
     @Test func reflectsTheStoredPreference() {
@@ -28,11 +28,11 @@ struct TorPreferenceReadTests {
         #expect(NetworkActivationService.persistedTorPreference(in: defaults))
     }
 
-    @Test func nonBooleanStoredValueReadsAsOn() {
+    @Test func nonBooleanStoredValueReadsAsOff() {
         let defaults = makeDefaults()
         defaults.set("nonsense", forKey: NetworkActivationService.torPreferenceKey)
 
-        // Same fail-safe direction: anything unrecognized means keep using Tor.
-        #expect(NetworkActivationService.persistedTorPreference(in: defaults))
+        // Unrecognized values follow the fresh-install default (opt-in Tor).
+        #expect(!NetworkActivationService.persistedTorPreference(in: defaults))
     }
 }
