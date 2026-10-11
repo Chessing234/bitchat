@@ -1100,57 +1100,6 @@ final class NoiseEncryptionService {
     }
 }
 
-// MARK: - Protocol Message Types for Noise
-
-/// Message types for the Noise encryption protocol layer.
-/// These types wrap the underlying BitChat protocol messages with encryption metadata.
-enum NoiseMessageType: UInt8 {
-    case handshakeInitiation = 0x10
-    case handshakeResponse = 0x11
-    case handshakeFinal = 0x12
-    case encryptedMessage = 0x13
-    case sessionRenegotiation = 0x14
-}
-
-// MARK: - Noise Message Wrapper
-
-/// Container for encrypted messages in the Noise protocol.
-/// Provides versioning and type information for proper message handling.
-/// The actual message content is encrypted in the payload field.
-struct NoiseMessage: Codable {
-    let type: UInt8
-    let sessionID: String  // Random ID for this handshake session
-    let payload: Data
-    
-    init(type: NoiseMessageType, sessionID: String, payload: Data) {
-        self.type = type.rawValue
-        self.sessionID = sessionID
-        self.payload = payload
-    }
-    
-    func encode() -> Data? {
-        do {
-            let encoded = try JSONEncoder().encode(self)
-            return encoded
-        } catch {
-            return nil
-        }
-    }
-    
-    static func decode(from data: Data) -> NoiseMessage? {
-        return try? JSONDecoder().decode(NoiseMessage.self, from: data)
-    }
-    
-    static func decodeWithError(from data: Data) -> NoiseMessage? {
-        do {
-            let decoded = try JSONDecoder().decode(NoiseMessage.self, from: data)
-            return decoded
-        } catch {
-            return nil
-        }
-    }
-}
-
 // MARK: - Errors
 
 enum NoiseEncryptionError: Error {
