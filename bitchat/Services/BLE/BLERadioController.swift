@@ -343,11 +343,7 @@ final class BLERadioController {
                     for: target.peripheralID
                 )
                 target.peripheral.delegate = self.peripheralDelegate
-                central.connect(target.peripheral, options: [
-                    CBConnectPeripheralOptionNotifyOnConnectionKey: true,
-                    CBConnectPeripheralOptionNotifyOnDisconnectionKey: true,
-                    CBConnectPeripheralOptionNotifyOnNotificationKey: true
-                ])
+                central.connect(target.peripheral, options: nil)
             }
             SecureLogger.info("🌙 Armed \(targets.count) pending background connect(s) for wake-on-proximity", category: .session)
         }
